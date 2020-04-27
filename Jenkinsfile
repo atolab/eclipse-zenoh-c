@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools {
+        cmake 'cmake-latest'
+    }
     stages {
         stage('Explore env') {
             steps {
