@@ -1,6 +1,19 @@
 pipeline {
     agent any
     stages {
+        stage('Explore env') {
+            steps {
+                sh '''
+                    uname -a
+                    pwd
+                    echo $PATH
+                    ls -al /shared/common/
+                    ls -al /shared/common/cmake*
+                    ls -al /usr/bin/
+                    ls -al /usr/local/bin/
+                '''
+            }
+        }
         stage('Build') {
             steps {
                 sh '''
@@ -16,13 +29,13 @@ pipeline {
             emailext subject: 'Build $BUILD_STATUS $PROJECT_NAME #$BUILD_NUMBER!', 
             body: '''Check console output at $BUILD_URL to view the results.''',
             recipientProviders: [culprits(), requestor()], 
-            to: 'other.recipient@domain.org'
+            to: 'julien.enoch@adlinktech.com'
         }
         fixed { // back to normal
             emailext subject: 'Build $BUILD_STATUS $PROJECT_NAME #$BUILD_NUMBER!', 
             body: '''Check console output at $BUILD_URL to view the results.''',
             recipientProviders: [culprits(), requestor()], 
-            to: 'other.recipient@domain.org'
+            to: 'julien.enoch@adlinktech.com'
         }
     }
 }
