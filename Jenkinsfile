@@ -10,10 +10,12 @@ pipeline {
                     uname -a
                     pwd
                     echo $PATH
-                    ls -al /shared/common/
-                    ls -al /shared/common/cmake*
-                    ls -al /usr/bin/
-                    ls -al /usr/local/bin/
+                    ls -al /shared/common/ || true
+                    ls -al /shared/common/cmake*  || true
+                    ls -al /usr/bin/  || true
+                    ls -al /usr/local/bin/  || true
+                    docker -v || true
+                    docker images || true
                 '''
             }
         }
