@@ -1,16 +1,35 @@
 pipeline {
   agent { label 'UbuntuVM' }
+  parameters {
+    gitParameter name: 'TAG', 
+                 type: 'PT_TAG',
+                 defaultValue: 'master'
+  }
   stages {
-    stage('Build zenoh-c') {
+    stage('Checkout Git TAG') {
+        steps {
+            checkout([$class: 'GitSCM', 
+                      branches: [[name: "${params.TAG}"]], 
+                      doGenerateSubmoduleConfigurations: false, 
+                      extensions: [], 
+                      gitTool: 'Default', 
+                      submoduleCfg: [], 
+                      userRemoteConfigs: [[url: 'https://github.com/jenkinsci/git-parameter-plugin.git']]
+                    ])
+        }
+    }
+    stage('Simple build') {
       steps {
         sh '''
-        uname -a
-        pwd
-        ls -al
         git log --graph --date=short --pretty=tformat:'%ad - %h - %cn -%d %s' -n 20 || true
-        docker -v || true
+        make all
+        '''
+      }
+    }
+    stage('Cross-platforms build') {
+      steps {
+        sh '''
         docker images || true
-        make all || true
         make all-cross
         '''
       }
