@@ -1,5 +1,5 @@
 pipeline {
-  agent any
+  agent { label 'zenoh' }
   stages {
     stage('Build zenoh-c') {
       steps {
