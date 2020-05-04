@@ -5,18 +5,19 @@ pipeline {
                  type: 'PT_TAG',
                  defaultValue: 'master'
   }
+
   stages {
     stage('Checkout Git TAG') {
-        steps {
-            checkout([$class: 'GitSCM', 
-                      branches: [[name: "${params.TAG}"]], 
-                      doGenerateSubmoduleConfigurations: false, 
-                      extensions: [], 
-                      gitTool: 'Default', 
-                      submoduleCfg: [], 
-                      userRemoteConfigs: [[url: 'https://github.com/atolab/eclipse-zenoh-c.git']]
-                    ])
-        }
+      steps {
+        checkout([$class: 'GitSCM',
+                  branches: [[name: "${params.TAG}"]],
+                  doGenerateSubmoduleConfigurations: false,
+                  extensions: [],
+                  gitTool: 'Default',
+                  submoduleCfg: [],
+                  userRemoteConfigs: [[url: 'https://github.com/atolab/eclipse-zenoh-c.git']]
+                ])
+      }
     }
     stage('Simple build') {
       steps {
@@ -33,6 +34,12 @@ pipeline {
         make all-cross
         '''
       }
+    }
+  }
+
+  post {
+    success {
+        archiveArtifacts artifacts: 'build/crossbuilds/*/*zenohc.*', fingerprint: true
     }
   }
 }
