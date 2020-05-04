@@ -1,5 +1,5 @@
 pipeline {
-  agent { label 'zenoh' }
+  agent { label 'UbuntuVM' }
   stages {
     stage('Build zenoh-c') {
       steps {
